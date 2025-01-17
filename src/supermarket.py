@@ -91,4 +91,20 @@ class Supermarket:
             new_cashier_num = random.choice(list(available_numbers))
             self._start_cashier(new_cashier_num)
 
+    def cleanup(self):
+        print("\nZamykanie supermarketu...")
+        self.is_open = False
 
+        for cashier in self.cashiers:
+            if cashier is not None:
+                cashier.terminate()
+                cashier.join()
+
+        for q in self.queues:
+            while not q.empty():
+                try:
+                    q.get_nowait()
+                except:
+                    continue
+
+        print("Supermarket zamknięty")
