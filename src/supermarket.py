@@ -67,3 +67,28 @@ class Supermarket:
         cashier = Cashier(cashier_num, self.queues[cashier_num])
         cashier.start()
         self.cashiers[cashier_num] = cashier
+
+    def _update_cashiers(self):  #zarządzanie kasami
+        total_customers = sum(self.queues[i].qsize() for i in self.active_cashier_numbers)
+        current_active = len(self.active_cashier_numbers)
+
+        if current_active < self.num_cashiers and total_customers > current_active * 5:
+            self._open_random_cashier()
+        elif current_active > self.min_active_cashiers and total_customers < (current_active - 1) * 5:
+            self._close_random_cashier()
+
+    def _close_random_cashier(self): #zamknięcie gdy K*(N-1)
+        closeable_cashiers = [num for num in self.active_cashier_numbers if num > 1]
+        if closeable_cashiers:
+            to_close = random.choice(closeable_cashiers)
+            print(f"Kasa {to_close + 1} zostanie zamknięta")
+            self.active_cashier_numbers.remove(to_close)
+
+
+    def _open_random_cashier(self): #otwacie losowej kasy
+        available_numbers = set(range(self.num_cashiers)) - set(self.active_cashier_numbers)
+        if available_numbers:
+            new_cashier_num = random.choice(list(available_numbers))
+            self._start_cashier(new_cashier_num)
+
+
