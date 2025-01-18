@@ -13,7 +13,7 @@ class SecurityGuard(Thread):
     def run(self):
         while True:
             if not self.supermarket.fire_event.is_set():
-                alarm_time = random.uniform(150, 250) # czas co ile jest alarm
+                alarm_time = random.uniform(15, 20) # czas co ile jest alarm
                 time.sleep(alarm_time)
                 self.trigger_fire_alarm()
 
@@ -37,3 +37,12 @@ class SecurityGuard(Thread):
                 except:
                     continue
         self.supermarket.total_customers = 0
+
+    def close_cashiers(self):
+        print(f"zamykanie wszystkich kas do ewakuacji")
+        # Zamknięcie wszystkich kas
+        for cashier in self.supermarket.cashiers:
+            if cashier is not None:
+                cashier.terminate()
+                cashier.join(timeout=0.5)
+        self.supermarket.cashiers = [None] * self.supermarket.num_cashiers
