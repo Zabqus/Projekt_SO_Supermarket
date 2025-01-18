@@ -23,3 +23,17 @@ class SecurityGuard(Thread):
         print("\n!!! ALARM POŻAROWY !!!")
         print("ROZPOCZĘTO EWAKUACJĘ")
         self.supermarket.is_open = False
+        self.supermarket.fire_event.set()
+        self.evacuate_customers()
+        self.close_cashiers()
+
+    def evacuate_customers(self):
+        print("Ewakuacja")
+        for queue in self.supermarket.queues:
+            while not queue.empty():
+                try:
+                    customer = queue.get_nowait()
+                    print(f"Klient {customer} ewakuowany")
+                except:
+                    continue
+        self.supermarket.total_customers = 0
