@@ -1,10 +1,10 @@
 import time
 import random
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Event
 from src.cashier import Cashier
-from src.customer import Customer
+from src.customer import  Customer
 from utils.config import Config
-
+from src.guard import SecurityGuard
 
 class Supermarket:
     def __init__(self, num_cashiers, min_active_cashiers):
@@ -16,8 +16,13 @@ class Supermarket:
         self.cashiers = [None] * num_cashiers
         self.is_open = True
         self.total_customers = 0
+        self.fire_event = Event()
 
         self.active_cashier_numbers = [0, 1]
+
+        self.guard = SecurityGuard(self)
+        self.guard.start()
+
 
     def start(self):
         print("Uruchamianie supermarketu")
@@ -33,7 +38,7 @@ class Supermarket:
     def _generate_customers(self):
         customer_id = 0
         last_status_time = time.time()
-        while self.is_open:
+        while self.is_open and not self.fire_event.is_set():
             try:
 
                 current_time = time.time()
