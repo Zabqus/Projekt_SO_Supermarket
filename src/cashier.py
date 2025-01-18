@@ -21,3 +21,4 @@ class Cashier(Process):
 
     def _serve_customer(self, customer):
         time.sleep(self.service_time)
+        print(f"kasa {self.id + 1} zakończyła obsługę klienta {customer}")

@@ -32,9 +32,15 @@ class Supermarket:
 
     def _generate_customers(self):
         customer_id = 0
-
+        last_status_time = time.time()
         while self.is_open:
             try:
+
+                current_time = time.time()
+                if current_time - last_status_time >= 10:
+                    self._display_status()
+                    last_status_time = current_time
+
                 customer_id += 1
                 print(f"Klient {customer_id} wszedł do sklepu")
                 shopping_time = random.uniform(0.5, 0.6) #czas na zakupy
@@ -84,6 +90,15 @@ class Supermarket:
         if available_numbers:
             new_cashier_num = random.choice(list(available_numbers))
             self._start_cashier(new_cashier_num)
+
+    def _display_status(self):
+        print("\nSTATUS")
+        print(f"Aktywne kasy: {len(self.active_cashier_numbers)}")
+        for cashier_num in sorted(self.active_cashier_numbers):
+            queue_size = self.queues[cashier_num].qsize()
+            print(f"Kasa {cashier_num + 1}ma {queue_size} klientów w kolejce")
+            print(f"\n")
+
 
     def cleanup(self):
         print("\nZamykanie supermarketu...")
