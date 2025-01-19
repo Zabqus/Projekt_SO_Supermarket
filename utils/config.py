@@ -5,4 +5,3 @@ class Config:
         self.CUSTOMERS_PER_CASHIER = 6  # liczba K z zadania - ilu klientów na jedną kasę
         self.MAX_QUEUE_SIZE = 50        # max rozmiar kolejki
 
-#max osoby na skelep (?)

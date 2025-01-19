@@ -1,7 +1,10 @@
 import sys
+import signal
+import platform
 from src.supermarket import Supermarket
 from utils.config import Config
-
+from multiprocessing import freeze_support
+from utils.signal_handler import SignalHandler
 
 def main():
     config = Config()

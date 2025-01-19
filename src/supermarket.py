@@ -2,7 +2,7 @@ import time
 import random
 from multiprocessing import Process, Queue, Event
 from src.cashier import Cashier
-from src.customer import  Customer
+from src.customer import Customer
 from utils.config import Config
 from src.guard import SecurityGuard
 from queue import Empty
@@ -41,28 +41,36 @@ class Supermarket:
         self.num_cashiers = num_cashiers
         self.min_active_cashiers = min_active_cashiers
 
+
+        self.fire_event = Event()
         self.queues = [Queue() for _ in range(num_cashiers)]
         self.cashiers = [None] * num_cashiers
         self.is_open = True
         self.total_customers = 0
-        self.fire_event = Event()
+
 
         self.active_cashier_numbers = [0, 1]
 
+        print(f" Przygotowanie {min_active_cashiers} kasjerów do otwarcia ")
+
         self.guard = SecurityGuard(self)
         self.guard.start()
-
 
     def start(self):
         print("Uruchamianie supermarketu")
         self._start_cashier(0)
         self._start_cashier(1)
 
-        try:
-            self._generate_customers()
-        except KeyboardInterrupt:
-            print("\nOtrzymano sygnał zakończenia")
-            self.cleanup()
+        while True:
+            try:
+                if self.is_open:
+                    self._generate_customers()
+                else:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                print("\n Otrzymanie sygnału zamknięcia sklepu")
+                self.cleanup()
+                break
 
     def _generate_customers(self):
         customer_id = 0
@@ -98,18 +106,24 @@ class Supermarket:
             print(f"Klient {customer_id} dołączył do kolejki {shortest_queue_idx + 1}")
 
     def _start_cashier(self, cashier_num):
-        cashier = Cashier(cashier_num, self.queues[cashier_num])
+        cashier = CashierProcess(cashier_num, self.queues[cashier_num], self.fire_event)
         cashier.start()
         self.cashiers[cashier_num] = cashier
+        if cashier_num not in self.active_cashier_numbers:
+            self.active_cashier_numbers.append(cashier_num)
+        print(f"Rozpoczęcie pracy kasjera nr {cashier_num + 1}")
 
-    def _update_cashiers(self):  #zarządzanie kasami
+    def _update_cashiers(self):
         total_customers = sum(self.queues[i].qsize() for i in self.active_cashier_numbers)
         current_active = len(self.active_cashier_numbers)
 
-        if current_active < self.num_cashiers and total_customers > current_active * 5:
-            self._open_random_cashier()
-        elif current_active > self.min_active_cashiers and total_customers < (current_active - 1) * 5:
-            self._close_random_cashier()
+        if total_customers < self.config.CUSTOMERS_PER_CASHIER * (current_active - 1):
+            if current_active > self.min_active_cashiers:
+                self._close_random_cashier()
+        else:
+            required_cashiers = (total_customers // self.config.CUSTOMERS_PER_CASHIER) + 1
+            if required_cashiers > current_active and current_active < self.num_cashiers:
+                self._open_random_cashier()
 
     def _close_random_cashier(self): #zamknięcie gdy K*(N-1)
         closeable_cashiers = [num for num in self.active_cashier_numbers if num > 1]
