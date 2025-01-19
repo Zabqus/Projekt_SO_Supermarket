@@ -1,10 +1,17 @@
 import signal
-
+import sys
+import time
 
 class SignalHandler:
     def __init__(self):
-        self.should_terminate = False
+        self.received_signal = False
+        self.fire_alarm = False
 
     def handle_shutdown(self, signum, frame):
-        print("\nOtrzymano sygnał zamknięcia")
-        self.should_terminate = True
+        self.received_signal = True
+        print("\nZamykanie supermarketu...")
+        sys.exit(0)
+
+    def handle_fire(self, signum, frame):
+        self.fire_alarm = True
+        print("\nALARM POŻAROWY! Ewakuacja supermarketu...")
