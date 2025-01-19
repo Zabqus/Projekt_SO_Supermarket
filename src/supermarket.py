@@ -5,6 +5,35 @@ from src.cashier import Cashier
 from src.customer import  Customer
 from utils.config import Config
 from src.guard import SecurityGuard
+from queue import Empty
+
+class CashierProcess(Process):
+
+
+    def __init__(self, cashier_id, queue, fire_event):
+        super().__init__()
+        self.cashier_id = cashier_id
+        self.queue = queue
+        self.fire_event = fire_event
+        self.is_active = True
+        self.is_closing = False
+
+    def run(self):
+        print(f"Cashier {self.cashier_id + 1} started working")
+        while self.is_active and not self.fire_event.is_set():
+            try:
+                if self.is_closing and self.queue.empty():
+                    print(f"Cashier {self.cashier_id + 1} finished work and is now closed")
+                    break
+
+                customer = self.queue.get(timeout=1)
+                if customer is not None:
+                    self._serve_customer(customer)
+            except Empty:
+                continue
+            except Exception as e:
+                print(f"Cashier {self.cashier_id + 1} error: {e}")
+
 
 class Supermarket:
     def __init__(self, num_cashiers, min_active_cashiers):
@@ -104,21 +133,35 @@ class Supermarket:
             print(f"Kasa {cashier_num + 1}ma {queue_size} klientów w kolejce")
             print(f"\n")
 
-
     def cleanup(self):
-        print("\nZamykanie supermarketu...")
+        print("\n Przygotowanie do zamknięcia sklepu ")
         self.is_open = False
+        self.fire_event.set()
 
-        for cashier in self.cashiers:
-            if cashier is not None:
-                cashier.terminate()
-                cashier.join()
+        #stop na strażaka
+        if hasattr(self, 'guard') and self.guard is not None:
+            try:
+                self.guard.join(timeout=1.0)
+            except Exception as e:
+                print(f"Zatrzymanie przez strażaka {e}")
 
-        for q in self.queues:
-            while not q.empty():
+
+        print("Zamykanie wszystkich kas...")
+        for cashier_num in sorted(self.active_cashier_numbers):
+            if self.cashiers[cashier_num] is not None:
+                print(f"Zamykanie kasjera {cashier_num + 1}")
                 try:
-                    q.get_nowait()
-                except:
-                    continue
+                    self.cashiers[cashier_num].terminate()
+                    self.cashiers[cashier_num].join(timeout=0.5)
+                except Exception as e:
+                    print(f"Błąd przy zamykaniu kasy nr{cashier_num + 1}: {e}")
 
-        print("Supermarket zamknięty")
+        print("Zamykanie kolejek ")
+        for i, q in enumerate(self.queues):
+            try:
+                while not q.empty():
+                    q.get_nowait()
+            except Exception as e:
+                print(f"Błąd przy zamykaniu kolejki {i + 1}: {e}")
+
+        print("Udane zamknięcie sklepu")
