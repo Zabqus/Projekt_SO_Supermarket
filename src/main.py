@@ -1,12 +1,27 @@
-import sys
 import signal
-import platform
+import sys
+import os
 from src.supermarket import Supermarket
 from utils.config import Config
-from multiprocessing import freeze_support
 from utils.signal_handler import SignalHandler
+import logging
+from utils.logging_config import setup_logging
+
 
 def main():
+    '''start logowania do pliku '''
+    log_filename = setup_logging()
+    logging.info("Otwarcie supermarketu")
+    logging.info(f"PID procesu głównego: {os.getpid()}")
+
+    '''Inicjalizacja obsługi sygnałów'''
+    signal_handler = SignalHandler()
+
+    '''Sygnały dla wydarzeń'''
+    signal.signal(signal.SIGINT, signal_handler.handle_shutdown)
+    signal.signal(signal.SIGTERM, signal_handler.handle_shutdown)
+    signal.signal(signal.SIGUSR1, signal_handler.handle_fire)
+
     config = Config()
 
     try:
@@ -16,14 +31,16 @@ def main():
         )
         supermarket.start()
 
-    except KeyboardInterrupt:
-        print("\nOtrzymano sygnał zakończenia")
+        signal.pause()
+
     except Exception as e:
-        print(f"Błąd: {e}", file=sys.stderr)
+        logging.error(f"Błąd: {e}")
         sys.exit(1)
     finally:
         if 'supermarket' in locals():
+            logging.info("Zamykanie supermarketu...")
             supermarket.cleanup()
+            logging.info("Supermarket zamknięty")
 
 
 if __name__ == "__main__":
