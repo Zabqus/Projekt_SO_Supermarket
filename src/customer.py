@@ -17,13 +17,15 @@ class Customer(Thread):
            if self.is_shopping:
                self._queue_for_checkout()
 
+    '''Symulacja robienia zakupów - losowy czas 1-5s'''
    def _do_shopping(self):
        time.sleep(random.uniform(1, 5))
+
 
    def _queue_for_checkout(self):
        self.supermarket.customer_queue.put(self)
        self.service_complete.wait()
-
+       '''Dodanie klienta do kolejki | oczekiwanie na obsługę'''
    def evacuate(self):
        self.is_shopping = False
        self.service_complete.set()

@@ -11,6 +11,7 @@ class Cashier(Process):
        self.customer_sem = customer_sem
        self.customer_queue = customer_queue
        self.fire_event = fire_event
+       '''Losowy czas obsługi klienta przez kasjera'''
        self.service_time = random.uniform(3, 5)
 
    def run(self):
@@ -19,11 +20,14 @@ class Cashier(Process):
                if self.fire_event.is_set():
                    break
                with self.customer_sem:
+                   '''Próba pobrania klienta z kolejki z timeoutem'''
                    customer = self.customer_queue.get(timeout=0.2)
                    if not self.fire_event.is_set():
                        self._serve_customer(customer)
            except:
                continue
+
+   '''Symulacja obsługi klienta'''
    def _serve_customer(self, customer):
        time.sleep(self.service_time)
        customer.service_complete.set()
