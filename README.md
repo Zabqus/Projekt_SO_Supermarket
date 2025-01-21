@@ -29,7 +29,7 @@
 ### System kolorowych komunikatów
 Implementacja zaawansowanego systemu kolorowych komunikatów w logach dla lepszej czytelności:
 * [Definicje kolorów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L7-L9)
-* [Kolorowanie komunikatów alarmowych](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L29-L30)
+* [Kolorowanie komunikatów alarmowych](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L27)
 * [Status supermarketu](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L79-L91)
 
 ### System synchronizacji
@@ -46,7 +46,7 @@ Implementacja zaawansowanego systemu kolorowych komunikatów w logach dla lepsze
   - Test automatycznego zamykania kas przy małym obciążeniu
 
 ### Test ewakuacji
-* [test_emergency_evacuation](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/tests/test_emergency_evacuation.py)
+* [test_evacuation](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/18db270dd300c31509b4568f359e81e89bc587ec/tests/test_evacuation.py)
   - Sprawdzenie procedury ewakuacji
   - Weryfikacja czyszczenia kolejek
   - Test stanu supermarketu po ewakuacji
@@ -58,12 +58,12 @@ Implementacja zaawansowanego systemu kolorowych komunikatów w logach dla lepsze
   - Test aktywnych kas na starcie
 
 ### Test minimalnej liczby kas
-* [test_min_cashiers_rule](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/tests/test_min_cashiers_rule.py)
+* [test_min_cashiers](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/18db270dd300c31509b4568f359e81e89bc587ec/tests/test_min_cashiers.py)
   - Weryfikacja utrzymania minimalnej liczby kas
   - Test mechanizmu automatycznego otwierania kas
 
 ### Test działania bez opóźnień
-* [test_supermarket_no_sleep](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/tests/test_supermarket_no_sleep.py)
+* [test_supermarket_no_sleep](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/18db270dd300c31509b4568f359e81e89bc587ec/tests/test_no_sleep.py)
   - Test funkcjonalności bez rzeczywistych opóźnień czasowych
   - Sprawdzenie logiki biznesowej w przyspieszonym trybie
   - Weryfikacja stanu po restarcie systemu
@@ -84,8 +84,33 @@ Implementacja zaawansowanego systemu kolorowych komunikatów w logach dla lepsze
 
 ### d. Obsługa sygnałów
 * [Definicja handlera sygnałów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/signal_handler.py#L5-L24)
-* [Konfiguracja obsługi sygnałów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/main.py#L14-L17)
+* [Konfiguracja obsługi sygnałów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/18db270dd300c31509b4568f359e81e89bc587ec/src/main.py#L20-L23)
 
 ### h. Kolejki komunikatów
 * [Implementacja menedżera kolejek](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/queue_manager.py#L1-L64)
 * [Obsługa kolejek w supermarkecie](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L24-L25)
+
+
+# Spełnione kryteria projektowe:
+
+- **Tworzenie i obsługa procesów/wątków**
+  * [Proces kasjera dziedziczący po Process](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/cashier.py#L5-L12)
+  * [Wątek klienta i jego zachowanie](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/customer.py#L5-L15)
+  * [Wątek strażnika monitorujący sytuacje awaryjne](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L12-L24)
+
+- **Systemowe mechanizmy synchronizacji**
+  * [Lock do synchronizacji dostępu do kolejek](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/queue_manager.py#L8-L11)
+  * [Mechanizm Event do koordynacji ewakuacji](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L31-L35)
+
+- **Obsługa sygnałów**
+  * [Definicje handlerów dla SIGINT i SIGUSR1](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/signal_handler.py#L11-L19)
+  * [Konfiguracja sygnałów w programie](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/18db270dd300c31509b4568f359e81e89bc587ec/src/main.py#L20-L23)
+
+- **Własne moduły**
+  * [Definicja głównych komponentów systemu](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/__init__.py#L1-L4)
+  * [Moduł konfiguracji parametrów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/config.py#L1-L7)
+  * [Moduł logowania z formatowaniem](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/logging_config.py#L17-L28)
+
+- **Wyjątki i obsługa błędów**
+  * [Obsługa wyjątków podczas operacji na kolejkach](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/queue_manager.py#L48-L55)
+  * [Obsługa błędów podczas zamykania kas](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L196-L201)
