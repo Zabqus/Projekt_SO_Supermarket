@@ -108,12 +108,12 @@ class Supermarket:
 
         while True:
             try:
-                if not self.is_open or self.fire_event.is_set():
+                if not self.is_open or self.fire_event.is_set(): #sprawdzenie czy nie ma alarmu i czy sklep jest otwarty
                     time.sleep(1)
                     continue
 
                 current_time = time.time()
-
+                '''Czas co jaki ma się wyświetlić mam status sklepu'''
                 if current_time - last_status_time >= 10:
                     self._display_status()
                     last_status_time = current_time
@@ -178,7 +178,7 @@ class Supermarket:
         self.is_open = False
         self.fire_event.set()
 
-        # Zatrzymanie strażnika
+        '''Zatrzymanie strażaka'''
         if hasattr(self, 'guard') and self.guard is not None:
             try:
                 self.guard.join(timeout=1.0)

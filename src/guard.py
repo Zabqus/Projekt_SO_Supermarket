@@ -56,7 +56,7 @@ class SecurityGuard(Thread):
             while not queue.empty():
                 try:
                     customer = queue.get_nowait()
-                    logging.info(f"klient {customer} został ewakuowany ze sklepu")
+                    logging.info(f"Klient {customer} został ewakuowany ze sklepu")
                 except:
                     continue
         self.supermarket.total_customers = 0
