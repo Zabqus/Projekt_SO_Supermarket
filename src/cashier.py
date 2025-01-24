@@ -20,7 +20,7 @@ class Cashier(Process):
                if self.fire_event.is_set():
                    break
                with self.customer_sem:
-                   '''Próba pobrania klienta z kolejki z timeoutem'''
+                   '''Próba pobrania klienta z kolejki'''
                    customer = self.customer_queue.get(timeout=0.2)
                    if not self.fire_event.is_set():
                        self._serve_customer(customer)

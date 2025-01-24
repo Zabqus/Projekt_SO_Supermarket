@@ -38,7 +38,7 @@ class CashierProcess(Process):
                 break
 
     def _serve_customer(self, customer_id):
-        service_time = random.uniform(5, 10)
+        service_time = random.uniform(5, 10) #czas na obsługę klienta przy kasie
         logging.info(f"Kasjer {self.cashier_id + 1} obsługiwał klienta {customer_id} przez {service_time:.2f}s")
         time.sleep(service_time)
         logging.info(f"Kasjer {self.cashier_id + 1} zakończył obsługiwanie klienta {customer_id}")
@@ -90,12 +90,12 @@ class Supermarket:
         logging.info(f"Rozpoczęcie pracy kasjera nr {cashier_num + 1}")
 
     def _display_status(self):
-
+        '''wyświetlanie statusu kas'''
         BLUE = '\033[94m'
 
         RESET = '\033[0m'
 
-        logging.info(f"\n{BLUE}=== STATUS SUPERMARKETU ==={RESET}")
+        logging.info(f"{BLUE}=== STATUS SUPERMARKETU ==={RESET}")
         logging.info(f"{BLUE}Active cashiers: {len(self.active_cashier_numbers)}{RESET}")
         for cashier_num in sorted(self.active_cashier_numbers):
             queue_size = self.queues[cashier_num].qsize()

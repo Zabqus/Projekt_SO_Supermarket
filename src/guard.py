@@ -30,9 +30,9 @@ class SecurityGuard(Thread):
 
         self.supermarket.is_open = False
         self.supermarket.fire_event.set()
-
+        '''status na pożar'''
         time.sleep(2.5)
-
+        '''czas na zamknięcie procesów'''
         self.stop_all_cashiers()
         self.evacuate_customers()
         self.close_cashiers()
@@ -80,7 +80,7 @@ class SecurityGuard(Thread):
 
         self.supermarket.cashiers = [None] * self.supermarket.num_cashiers
         self.supermarket.active_cashier_numbers = [0, 1]
-
+        '''rozpoczęcie sklepu z 2 kasjerami'''
         self.supermarket.queues = [Queue() for _ in range(self.supermarket.num_cashiers)]
 
 
