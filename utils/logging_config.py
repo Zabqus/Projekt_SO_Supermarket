@@ -8,7 +8,7 @@ def setup_logging():
     '''Jeśli nie ma katalogu logs to go tworzymy'''
     logs_dir = 'logs'
     if not os.path.exists(logs_dir):
-        os.makedirs(logs_dir, mode=0o755)
+        os.makedirs(logs_dir, mode=0o700)
 
     user = pwd.getpwuid(os.getuid()).pw_name
     '''Tworzenie numeru i nazwy pliku'''
@@ -35,6 +35,6 @@ def setup_logging():
     logging.info(f'Plik logowania: {log_filename}')
 
     '''uprawnienia dla pliku logów'''
-    os.chmod(log_filename, 0o644)
+    os.chmod(log_filename, 0o600)
 
     return log_filename

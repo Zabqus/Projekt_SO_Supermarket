@@ -3,7 +3,6 @@
 ## Założenia projektowe i ich implementacja
 * [Obsługa 10 kas w supermarkecie](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/config.py#L3)
 * [Minimum 2 czynne stanowiska kasowe](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/config.py#L4)
-* [Dynamiczne skalowanie kas w zależności od liczby klientów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L136-L149)
 * [Obsługa klientów przed zamknięciem kasy](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L151-L155)
 * [Ewakuacja w przypadku pożaru](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L26-L47)
 
@@ -28,7 +27,6 @@
 
 ### System kolorowych komunikatów
 Implementacja zaawansowanego systemu kolorowych komunikatów w logach dla lepszej czytelności:
-* [Definicje kolorów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L7-L9)
 * [Kolorowanie komunikatów alarmowych](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L27)
 * [Status supermarketu](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L79-L91)
 
