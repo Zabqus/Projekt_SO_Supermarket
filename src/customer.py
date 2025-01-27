@@ -19,8 +19,8 @@ class Customer(Thread):
 
 
    def _do_shopping(self):
-       time.sleep(random.uniform(1, 5))
-       '''Symulacja robienia zakupów - losowy czas 1-5s'''
+       time.sleep(random.uniform(1, 2))
+       '''Symulacja robienia zakupów'''
 
 
    def _queue_for_checkout(self):

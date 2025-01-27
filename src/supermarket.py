@@ -38,7 +38,7 @@ class CashierProcess(Process):
                 break
 
     def _serve_customer(self, customer_id):
-        service_time = random.uniform(5, 10) #czas na obsługę klienta przy kasie
+        service_time = random.uniform(4, 6) #czas na obsługę klienta przy kasie
         logging.info(f"Kasjer {self.cashier_id + 1} obsługiwał klienta {customer_id} przez {service_time:.2f}s")
         time.sleep(service_time)
         logging.info(f"Kasjer {self.cashier_id + 1} zakończył obsługiwanie klienta {customer_id}")
@@ -87,7 +87,7 @@ class Supermarket:
         self.cashiers[cashier_num] = cashier
         if cashier_num not in self.active_cashier_numbers:
             self.active_cashier_numbers.append(cashier_num)
-        logging.info(f"Rozpoczęcie pracy kasjera nr {cashier_num + 1}")
+        #logging.info(f"Rozpoczęcie pracy kasjera nr {cashier_num + 1}")
 
     def _display_status(self):
         '''wyświetlanie statusu kas'''
@@ -122,14 +122,14 @@ class Supermarket:
                 logging.info(f"Klient {customer_id} wszedł do sklepu")
 
                 '''Symulacja chodzenia po sklepie'''
-                shopping_time = random.uniform(0.5, 0.6)
+                shopping_time = random.uniform(0.5, 1)
                 logging.info(f"Klient {customer_id} robił zakupy przez {shopping_time:.2f}s")
                 time.sleep(shopping_time)
                 '''Ponowne sprawdzenie po zakupach czy nie ma pożaru'''
                 if self.is_open and not self.fire_event.is_set():
                     logging.info(f"klient {customer_id} zakończył robienie zakupów")
                     self._add_customer(customer_id)
-                time.sleep(random.uniform(0.2, 0.5))
+                time.sleep(random.uniform(0.2, 0.3)) #czas co ile wchodzą klienci do sklepu
 
             except KeyboardInterrupt:
                 break

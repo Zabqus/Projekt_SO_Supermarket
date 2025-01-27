@@ -12,7 +12,7 @@ class Cashier(Process):
        self.customer_queue = customer_queue
        self.fire_event = fire_event
        '''Losowy czas obsługi klienta przez kasjera'''
-       self.service_time = random.uniform(3, 5)
+       self.service_time = random.uniform(2, 3)
 
    def run(self):
        while self.is_active and not self.fire_event.is_set():
