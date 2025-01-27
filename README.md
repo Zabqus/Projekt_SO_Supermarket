@@ -26,12 +26,12 @@
 ## Wyróżniające elementy projektu
 
 ### System kolorowych komunikatów
-Implementacja zaawansowanego systemu kolorowych komunikatów w logach dla lepszej czytelności:
+
 * [Kolorowanie komunikatów alarmowych](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L27)
 * [Status supermarketu](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L79-L91)
 
 ### System synchronizacji
-* [Synchronizacja kolejek przez QueueManager](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/queue_manager.py#L8-L15)
+* [Synchronizacja kolejek](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/queue_manager.py#L8-L15)
 * [Koordynacja ewakuacji](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L57-L66)
 * [Zarządzanie stanem supermarketu](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L186-L214)
 
@@ -72,7 +72,7 @@ Implementacja zaawansowanego systemu kolorowych komunikatów w logach dla lepsze
 
 ## Testy jednostkowe
 
-### Test skalowania kas
+### [Test skalowania kas](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/4902f536af702d3350180eeeb0906dcf453288dc/tests/Test_scaling.md)
 
 
 ### [Test ewakuacji]((https://github.com/Zabqus/Projekt_SO_Supermarket/blob/9f9ecfda851714d1481baaed39a4d6b4f002cea7/tests/test_evacuation.md))
