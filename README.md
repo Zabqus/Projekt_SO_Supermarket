@@ -75,8 +75,7 @@
 ### [Test skalowania kas](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/4902f536af702d3350180eeeb0906dcf453288dc/tests/Test_scaling.md)
 
 
-### [Test ewakuacji]((https://github.com/Zabqus/Projekt_SO_Supermarket/blob/9f9ecfda851714d1481baaed39a4d6b4f002cea7/tests/test_evacuation.md))
-
+### [Test ewakuacji](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/9f9ecfda851714d1481baaed39a4d6b4f002cea7/tests/test_evacuation.md)
 
 
 ### [Test minimalnej liczby kas](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/9f9ecfda851714d1481baaed39a4d6b4f002cea7/tests/test_min_cashier.md)

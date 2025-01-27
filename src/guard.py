@@ -19,7 +19,7 @@ class SecurityGuard(Thread):
         while True:
             if not self.supermarket.fire_event.is_set():
                 '''Losowy czas do następnego alarmu'''
-                alarm_time = random.uniform(60, 180)
+                alarm_time = random.uniform(60, 80)
                 time.sleep(alarm_time)
                 self.trigger_fire_alarm()
 
