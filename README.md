@@ -73,29 +73,12 @@ Implementacja zaawansowanego systemu kolorowych komunikatów w logach dla lepsze
 ## Testy jednostkowe
 
 ### Test skalowania kas
-* [test_cashier_scaling](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/tests/test_cashier_scaling.py)
-  - Weryfikacja dynamicznego skalowania liczby kas
-  - Test automatycznego zamykania kas przy małym obciążeniu
 
-### Test ewakuacji
-* [test_evacuation](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/18db270dd300c31509b4568f359e81e89bc587ec/tests/test_evacuation.py)
-  - Sprawdzenie procedury ewakuacji
-  - Weryfikacja czyszczenia kolejek
-  - Test stanu supermarketu po ewakuacji
 
-### Test stanu początkowego
-* [test_initial_state](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/tests/test_initial_state.py)
-  - Weryfikacja początkowej konfiguracji
-  - Sprawdzenie domyślnych wartości
-  - Test aktywnych kas na starcie
+### [Test ewakuacji]((https://github.com/Zabqus/Projekt_SO_Supermarket/blob/9f9ecfda851714d1481baaed39a4d6b4f002cea7/tests/test_evacuation.md))
 
-### Test minimalnej liczby kas
-* [test_min_cashiers](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/18db270dd300c31509b4568f359e81e89bc587ec/tests/test_min_cashiers.py)
-  - Weryfikacja utrzymania minimalnej liczby kas
-  - Test mechanizmu automatycznego otwierania kas
 
-### Test działania bez opóźnień
-* [test_supermarket_no_sleep](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/18db270dd300c31509b4568f359e81e89bc587ec/tests/test_no_sleep.py)
-  - Test funkcjonalności bez rzeczywistych opóźnień czasowych
-  - Sprawdzenie logiki biznesowej w przyspieszonym trybie
-  - Weryfikacja stanu po restarcie systemu
+
+### [Test minimalnej liczby kas](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/9f9ecfda851714d1481baaed39a4d6b4f002cea7/tests/test_min_cashier.md)
+
+
