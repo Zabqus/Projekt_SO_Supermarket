@@ -18,7 +18,6 @@ class Supermarket:
         # System sygnałów
         self.signal_system = SignalSystem()
 
-        # Jedna współdzielona kolejka
         self.shared_queue = SharedMemoryQueue()
         self.cashiers = [None] * num_cashiers
         self.is_open = True
@@ -38,7 +37,7 @@ class Supermarket:
         self._start_cashier(1)
 
         try:
-            while True:  # Zmiana warunku pętli
+            while True:
                 if self.is_open and not self.signal_system.is_fire():
                     self._generate_customers()
                 time.sleep(0.1)
@@ -49,10 +48,10 @@ class Supermarket:
     def _start_cashier(self, cashier_num):
         pid = os.fork()
 
-        if pid == 0:  # Proces potomny (kasjer)
+        if pid == 0:
             from .cashier import start_cashier
             start_cashier(cashier_num, self.shared_queue)
-        else:  # Proces rodzica
+        else:
             self.cashiers[cashier_num] = pid
             self.signal_system.register_child(pid)
             if cashier_num not in self.active_cashier_numbers:
@@ -144,16 +143,26 @@ class Supermarket:
         self._cleanup_started = True
         self.is_open = False
 
-        # Zamykanie kasjerów
+
         for cashier_num in sorted(self.active_cashier_numbers):
             try:
                 if self.cashiers[cashier_num]:
                     os.kill(self.cashiers[cashier_num], signal.SIGTERM)
-                    os.waitpid(self.cashiers[cashier_num], 0)
+                    pid, _ = os.waitpid(self.cashiers[cashier_num], os.WNOHANG)
+                    if pid == 0:
+                        time.sleep(0.5)
+                        os.waitpid(self.cashiers[cashier_num], 0)
             except:
                 pass
 
-        #czyszczenie kolejki
+        try:
+            while True:
+                pid, _ = os.waitpid(-1, os.WNOHANG)
+                if pid <= 0:
+                    break
+        except ChildProcessError:
+            pass
+
         try:
             self.shared_queue.close()
             if hasattr(self, 'guard'):

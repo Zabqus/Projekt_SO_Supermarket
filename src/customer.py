@@ -38,8 +38,7 @@ class Customer(Thread):
             shopping_time = random.uniform(1, 5)
             logging.info(f"Klient {self.id} robi zakupy przez {shopping_time:.2f}s")
 
-            # Podzielenie czasu zakupów na krótsze interwały,
-            # aby klient mógł szybciej zareagować na ewakuację
+            '''interwały tak aby była lepsza reakcja na ewakuację'''
             intervals = int(shopping_time / 0.5)
             for _ in range(intervals):
                 if not self.is_shopping or self.supermarket.signal_system.is_fire():

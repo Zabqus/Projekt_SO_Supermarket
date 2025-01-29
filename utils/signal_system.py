@@ -8,14 +8,13 @@ class SignalSystem:
         self._fire_signal = False
         self._child_pids = set()
 
-        # Ustawienie obsługi sygnałów
+        '''Ustawienie obsługi sygnałów'''
         signal.signal(signal.SIGUSR1, self._handle_fire)
         signal.signal(signal.SIGCHLD, self._handle_child)
 
     def _handle_fire(self, signum, frame):
-        if not self._fire_signal:  # Dodajemy zabezpieczenie
+        if not self._fire_signal:
             self._fire_signal = True
-            # Przekazanie sygnału tylko do procesów potomnych
             for pid in self._child_pids:
                 try:
                     os.kill(pid, signal.SIGUSR1)
@@ -41,9 +40,8 @@ class SignalSystem:
 
     def set_fire(self):
         """Ustawienie sygnału pożaru"""
-        if not self._fire_signal:  # Dodajemy zabezpieczenie
+        if not self._fire_signal:
             self._fire_signal = True
-            # Przekazujemy sygnał tylko do procesów potomnych
             for pid in self._child_pids:
                 try:
                     os.kill(pid, signal.SIGUSR1)
