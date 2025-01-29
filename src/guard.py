@@ -1,89 +1,74 @@
 from threading import Thread
-from multiprocessing import Queue, Event
 import time
 import random
 import signal
 import logging
+import os
+import sys
 
 RED = '\033[91m'
 GREEN = '\033[92m'
 RESET = '\033[0m'
+
 
 class SecurityGuard(Thread):
     def __init__(self, supermarket):
         super().__init__()
         self.supermarket = supermarket
         self.daemon = True
+        self.active = True
+        signal.signal(signal.SIGUSR1, self._handle_alarm)
+
+    def _handle_alarm(self, signum, frame):
+        if signum == signal.SIGUSR1:
+            self.trigger_fire_alarm()
 
     def run(self):
-        while True:
-            if not self.supermarket.fire_event.is_set():
-                '''Losowy czas do następnego alarmu'''
-                alarm_time = random.uniform(60, 80)
+        while self.active:
+            if not self.supermarket.signal_system.is_fire():
+                alarm_time = random.uniform(60,75 )
                 time.sleep(alarm_time)
-                self.trigger_fire_alarm()
+                if self.active:
+                    self.trigger_fire_alarm()
 
     def trigger_fire_alarm(self):
-        logging.info(f"\n{RED}!!! UWAGA ALARM POŻAROWY !!!")
-        logging.info(f" EWAKUACJA WSZYSTKICH W SUPERMARKECIE {RESET}")
+        if not self.supermarket.signal_system.is_fire():
+            logging.info(f"\n{RED}!!! UWAGA ALARM POŻAROWY !!!")
+            logging.info(f" EWAKUACJA WSZYSTKICH W SUPERMARKECIE {RESET}")
 
+            self.supermarket.signal_system.set_fire()
+            self.supermarket.is_open = False
 
-        self.supermarket.is_open = False
-        self.supermarket.fire_event.set()
-        '''status na pożar'''
-        time.sleep(2.5)
-        '''czas na zamknięcie procesów'''
-        self.stop_all_cashiers()
-        self.evacuate_customers()
-        self.close_cashiers()
+            self.stop_all_cashiers()  # Najpierw zatrzymaj kasjerów
+            self.evacuate_customers()  # Potem ewakuuj klientów
 
-        logging.info(f"\n{RED} Ewakuacja klientów i zamkniecie kas")
-        logging.info(f"Czekanie aż pożar zostanie ugaszony {RESET}")
-        time.sleep(15)
-
-        self.reopen_supermarket()
+            logging.info(f"{RED}Sklep został zamknięty z powodu alarmu pożarowego{RESET}")
+            os.kill(os.getppid(), signal.SIGINT)
 
     def stop_all_cashiers(self):
-        for cashier in self.supermarket.cashiers:
-            if cashier is not None:
-                cashier.terminate()
-                cashier.join(timeout=0.1)
+        # Wysłanie SIGTERM
+        for pid in self.supermarket.cashiers:
+            if pid is not None:
+                try:
+                    os.kill(pid, signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
+
+        time.sleep(1)
+
         self.supermarket.cashiers = [None] * self.supermarket.num_cashiers
 
     def evacuate_customers(self):
         logging.info(f"{RED}Ewakuowanie klientów")
-        for queue in self.supermarket.queues:
-            while not queue.empty():
-                try:
-                    customer = queue.get_nowait()
-                    logging.info(f"Klient {customer} został ewakuowany ze sklepu")
-                except:
-                    continue
-        self.supermarket.total_customers = 0
-        logging.info(f"{RESET}")
+        try:
+            while not self.supermarket.shared_queue.empty():
+                customer = self.supermarket.shared_queue.get()
+                logging.info(f"Klient {customer} został ewakuowany ze sklepu")
+        except Exception as e:
+            logging.error(f" {e}")
 
-    def close_cashiers(self):
-        logging.info(f"{RED}zamykanie wszystkich kas do ewakuacji")
-        for cashier in self.supermarket.cashiers:
-            if cashier is not None:
-                cashier.is_closing = True
-                time.sleep(0.1)
-                cashier.terminate()
-                cashier.join(timeout=0.5)
-        self.supermarket.cashiers = [None] * self.supermarket.num_cashiers
-
-    def reopen_supermarket(self):
-        logging.info(f"\n{GREEN} Ponowne otwrcie supermarketu")
-        self.supermarket.fire_event.clear()
-        self.supermarket.is_open = True
         self.supermarket.total_customers = 0
 
-        self.supermarket.cashiers = [None] * self.supermarket.num_cashiers
-        self.supermarket.active_cashier_numbers = [0, 1]
-        '''rozpoczęcie sklepu z 2 kasjerami'''
-        self.supermarket.queues = [Queue() for _ in range(self.supermarket.num_cashiers)]
 
-
-        self.supermarket._start_cashier(0)
-        self.supermarket._start_cashier(1)
-        logging.info(f"Skep otwarty i gotowy do przyjścia klientów{RESET}")
+    def stop(self):
+        self.active = False
