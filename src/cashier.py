@@ -1,33 +1,63 @@
-from multiprocessing import Process
+import os
 import time
 import random
+import signal
 import logging
+from utils.shared_memory_queue import SharedMemoryQueue, Empty
 
-class Cashier(Process):
-   def __init__(self, id, customer_sem, customer_queue, fire_event):
-       super().__init__()
-       self.id = id
-       self.is_active = True
-       self.customer_sem = customer_sem
-       self.customer_queue = customer_queue
-       self.fire_event = fire_event
-       '''Losowy czas obsługi klienta przez kasjera'''
-       self.service_time = random.uniform(2, 3)
 
-   def run(self):
-       while self.is_active and not self.fire_event.is_set():
-           try:
-               if self.fire_event.is_set():
-                   break
-               with self.customer_sem:
-                   '''Próba pobrania klienta z kolejki'''
-                   customer = self.customer_queue.get(timeout=0.2)
-                   if not self.fire_event.is_set():
-                       self._serve_customer(customer)
-           except:
-               continue
+class Cashier:
+    def __init__(self, cashier_id, shared_queue):
+        self.cashier_id = cashier_id
+        self.shared_queue = shared_queue
+        self.is_active = True
 
-   '''Symulacja obsługi klienta'''
-   def _serve_customer(self, customer):
-       time.sleep(self.service_time)
-       customer.service_complete.set()
+    def run(self):
+        """Główna pętla procesu kasjera"""
+        signal.signal(signal.SIGTERM, self._handle_terminate)
+        signal.signal(signal.SIGUSR1, self._handle_fire)
+
+        logging.info(f"Kasjer {self.cashier_id + 1} rozpoczyna pracę")
+
+        while self.is_active:
+            try:
+                # Próba obsługi klienta ze współdzielonej kolejki
+                customer = self.shared_queue.get(timeout=0.2)
+                if customer is not None and self.is_active:
+                    self._serve_customer(customer)
+            except Empty:
+                # Brak klientów w kolejce
+                continue
+            except Exception as e:
+                logging.error(f"Błąd kasjera {self.cashier_id + 1}: {e}")
+                break
+
+        logging.info(f"Kasjer {self.cashier_id + 1} kończy pracę")
+
+    def _serve_customer(self, customer_id):
+        """Obsługa pojedynczego klienta"""
+        service_time = random.uniform(4, 6)
+        logging.info(f"Kasjer {self.cashier_id + 1} obsługuje klienta {customer_id} przez {service_time:.2f}s")
+        time.sleep(service_time)
+        logging.info(f"Kasjer {self.cashier_id + 1} zakończył obsługę klienta {customer_id}")
+
+    def _handle_terminate(self, signum, frame):
+        """Obsługa sygnału zakończenia pracy"""
+        logging.info(f"Kasjer {self.cashier_id + 1} otrzymał sygnał zakończenia pracy")
+        self.is_active = False
+
+    def _handle_fire(self, signum, frame):
+        """Obsługa sygnału pożaru"""
+        logging.info(f"Kasjer {self.cashier_id + 1} otrzymał sygnał pożaru")
+        self.is_active = False
+
+
+def start_cashier(cashier_id, shared_queue):
+    """Funkcja startowa dla procesu kasjera"""
+    try:
+        cashier = Cashier(cashier_id, shared_queue)
+        cashier.run()
+    except Exception as e:
+        logging.error(f"Krytyczny błąd kasjera {cashier_id + 1}: {e}")
+    finally:
+        os._exit(0)
