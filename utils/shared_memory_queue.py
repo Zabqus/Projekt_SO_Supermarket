@@ -12,16 +12,16 @@ class SharedMemoryQueue:
         self.read_fd, self.write_fd = os.pipe()
         flags = fcntl.fcntl(self.write_fd, fcntl.F_GETFL)
         fcntl.fcntl(self.write_fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
-        '''tworzenie pliku'''
+        '''tworzenie pliku pamięci współdzielonej'''
         self.shm_fd = os.open('/dev/shm/queue_size', os.O_CREAT | os.O_RDWR)
-        os.write(self.shm_fd, b'\x00\x00\x00\x00') #4 bajty na int
+        os.write(self.shm_fd, b'\x00\x00\x00\x00')
         self.size_map = mmap.mmap(self.shm_fd, 4)
 
     def put(self, item):
         try:
             data = pickle.dumps(item)
             length = struct.pack('!I', len(data))
-            written = os.write(self.write_fd, length + data)  # Łączymy length i data
+            written = os.write(self.write_fd, length + data)
             if written > 0:
                 self._set_size(self._get_size() + 1)
             return True
