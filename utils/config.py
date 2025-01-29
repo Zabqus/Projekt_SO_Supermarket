@@ -4,4 +4,4 @@ class Config:
         self.MIN_ACTIVE_CASHIERS = 2    # min liczba aktywnych kas
         self.CUSTOMERS_PER_CASHIER = 5  # liczba K z zadania - ilu klientów na jedną kasę
         self.MAX_QUEUE_SIZE = 50        # max rozmiar kolejki
-
+        self.SHARED_MEMORY_SIZE = (2 + self.NUM_CASHIERS) * 4 #pamięc współdzielona
