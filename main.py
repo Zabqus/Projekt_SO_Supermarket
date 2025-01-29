@@ -8,16 +8,16 @@ import logging
 
 def setup_signal_handlers(supermarket):
     def handle_shutdown(signum, frame):
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        signal.signal(signal.SIGINT, signal.SIG_IGN)  # Ignoruj kolejne sygnały
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
         if not hasattr(supermarket, '_cleanup_started'):
-            print("\nZamykanie supermarketu...")
+            print("\nZamykanie supermarketu...")  # Użyj print zamiast logging
             supermarket.cleanup()
         sys.exit(0)
 
     def handle_fire(signum, frame):
         if not supermarket.signal_system.is_fire():
-            print("\nALARM POŻAROWY")
+            print("\nALARM POŻAROWY")  # Użyj print zamiast logging
             supermarket.signal_system.set_fire()
 
     signal.signal(signal.SIGINT, handle_shutdown)

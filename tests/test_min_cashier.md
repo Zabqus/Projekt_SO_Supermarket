@@ -4,7 +4,7 @@ Zakładamy, że zawsze mają być otwarte dwie kasy
 
 Ustawiamy krótki czas obsługi klienta oraz małą częstotliwość przychodzenia klientów do sklepu
 
-W efekciie otrzymujemy następujący wynik:
+W efekcie otrzymujemy następujący wynik:
 
 ```
 2025-01-27 18:22:37,833 [INFO] - Klient 270 wszedł do sklepu
@@ -30,13 +30,15 @@ W efekciie otrzymujemy następujący wynik:
 Ponad to zawsze przy otwarciu sklepu dostajemy informację: 
 
 ```
-2025-01-27 18:29:37,945 [INFO] -  Przygotowanie 2 kasjerów do otwarcia 
-2025-01-27 18:29:37,945 [INFO] - Otwarcie supermarketu
-2025-01-27 18:29:37,947 [INFO] - Kasjer 1 zaczął pracę
-2025-01-27 18:29:37,948 [INFO] - Kasjer 2 zaczął pracę
-
+2025-01-29 16:29:15,730 [INFO] - Przygotowanie 2 kasjerów do otwarcia
+2025-01-29 16:29:15,731 [INFO] - Otwarcie supermarketu
+2025-01-29 16:29:15,732 [INFO] - Klient 1 wszedł do sklepu
+2025-01-29 16:29:15,733 [INFO] - Klient 1 robi zakupy przez 0.66s
+2025-01-29 16:29:15,736 [INFO] - Kasjer 1 rozpoczyna pracę
+2025-01-29 16:29:15,736 [INFO] - Kasjer 2 rozpoczyna pracę
+2025-01-29 16:29:16,403 [INFO] - Klient 1 zakończył zakupy
+2025-01-29 16:29:16,404 [INFO] - Klient 1 stanął w kolejce
 
 ```
 
-## Test przebiegł pomyślnie 
 

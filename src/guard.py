@@ -26,7 +26,7 @@ class SecurityGuard(Thread):
     def run(self):
         while self.active:
             if not self.supermarket.signal_system.is_fire():
-                alarm_time = random.uniform(60,75 )
+                alarm_time = random.uniform(30,45 )
                 time.sleep(alarm_time)
                 if self.active:
                     self.trigger_fire_alarm()
