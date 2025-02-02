@@ -7,6 +7,7 @@ from utils.config import Config
 from utils.shared_memory_queue import SharedMemoryQueue, Empty
 from utils.signal_system import SignalSystem
 from .guard import SecurityGuard
+from .customer import Customer
 
 
 class Supermarket:
@@ -22,6 +23,7 @@ class Supermarket:
         self.cashiers = [None] * num_cashiers
         self.is_open = True
         self.total_customers = 0
+        self.customers = []  # lista wątków klientów
 
         # Rozpoczynamy z minimum 2 kasjerami
         self.active_cashier_numbers = [0, 1]
@@ -75,7 +77,7 @@ class Supermarket:
             if not self.is_open or self.signal_system.is_fire():
                 return
 
-            # Sprawdzenie i aktualizacja statusu
+            # status na sklepie
             current_time = time.time()
             if not hasattr(self, 'last_status_time'):
                 self.last_status_time = current_time
@@ -83,19 +85,12 @@ class Supermarket:
                 self._display_status()
                 self.last_status_time = current_time
 
-            # Generowanie nowego klienta
+            # nowy klient = wątek
             customer_id = self.total_customers + 1
-            logging.info(f"Klient {customer_id} wszedł do sklepu")
-
-            # Symulacja zakupów
-            shopping_time = random.uniform(0.5, 1)
-            logging.info(f"Klient {customer_id} robi zakupy przez {shopping_time:.2f}s")
-            time.sleep(shopping_time)
-
-            # Dodanie klienta do kolejki jeśli sklep nadal otwarty
-            if self.is_open and not self.signal_system.is_fire():
-                logging.info(f"Klient {customer_id} zakończył zakupy")
-                self._add_customer(customer_id)
+            new_customer = Customer(customer_id, self)
+            self.customers.append(new_customer)
+            new_customer.start()
+            self.total_customers += 1
 
             # Opóźnienie przed następnym klientem
             time.sleep(random.uniform(0.2, 0.3))
@@ -103,12 +98,12 @@ class Supermarket:
         except Exception as e:
             logging.error(f"Błąd podczas generowania klienta: {e}")
 
-    def _add_customer(self, customer_id):
+    '''def _add_customer(self, customer_id):
         if len(self.active_cashier_numbers) > 0:
             self.shared_queue.put(customer_id)
             self.total_customers += 1
             logging.info(f"Klient {customer_id} stanął w kolejce")
-            self._update_cashiers()
+            self._update_cashiers()'''
 
     def _update_cashiers(self):
         queue_size = self.shared_queue.qsize()
@@ -143,7 +138,15 @@ class Supermarket:
         self._cleanup_started = True
         self.is_open = False
 
+        # Zatrzymanie wątków klientów
+        for customer in self.customers:
+            customer.is_shopping = False
+            try:
+                customer.join(timeout=1.0)
+            except:
+                pass
 
+        # Zamykanie procesów kasjerów
         for cashier_num in sorted(self.active_cashier_numbers):
             try:
                 if self.cashiers[cashier_num]:
@@ -155,6 +158,7 @@ class Supermarket:
             except:
                 pass
 
+        # Czyszczenie pozostałych procesów potomnych
         try:
             while True:
                 pid, _ = os.waitpid(-1, os.WNOHANG)
@@ -163,6 +167,7 @@ class Supermarket:
         except ChildProcessError:
             pass
 
+        # Czyszczenie zasobów
         try:
             self.shared_queue.close()
             if hasattr(self, 'guard'):
