@@ -36,7 +36,7 @@ class Cashier:
 
     def _serve_customer(self, customer_id):
         """Obsługa pojedynczego klienta"""
-        service_time = random.uniform(2, 4)
+        service_time = random.uniform(3, 6)
         logging.info(f"Kasjer {self.cashier_id + 1} obsługuje klienta {customer_id} przez {service_time:.2f}s")
         time.sleep(service_time)
         logging.info(f"Kasjer {self.cashier_id + 1} zakończył obsługę klienta {customer_id}")

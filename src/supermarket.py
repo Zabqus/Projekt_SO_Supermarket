@@ -93,7 +93,7 @@ class Supermarket:
             self.total_customers += 1
 
 
-            time.sleep(random.uniform(0.7, 1.3))
+            time.sleep(random.uniform(0.5, 1))
 
         except Exception as e:
             logging.error(f"Błąd podczas generowania klienta: {e}")
