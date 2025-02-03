@@ -93,7 +93,7 @@ class Supermarket:
             self.total_customers += 1
 
             # Opóźnienie przed następnym klientem
-            time.sleep(random.uniform(0.2, 0.3))
+            time.sleep(random.uniform(0.5, 1))
 
         except Exception as e:
             logging.error(f"Błąd podczas generowania klienta: {e}")
@@ -109,13 +109,22 @@ class Supermarket:
         queue_size = self.shared_queue.qsize()
         current_active = len(self.active_cashier_numbers)
 
-        if queue_size < self.config.CUSTOMERS_PER_CASHIER * (current_active - 1):
-            if current_active > self.min_active_cashiers:
+
+        required_cashiers = max(
+            self.config.MIN_ACTIVE_CASHIERS,
+            queue_size // self.config.CUSTOMERS_PER_CASHIER + 1
+        )
+
+
+        if current_active < required_cashiers and current_active < self.config.NUM_CASHIERS:
+            available = list(set(range(self.config.NUM_CASHIERS)) - set(self.active_cashier_numbers))
+            if available:
+                self._start_cashier(available[0])
+
+
+        elif queue_size < self.config.CUSTOMERS_PER_CASHIER * (current_active - 1):
+            if current_active > self.config.MIN_ACTIVE_CASHIERS:
                 self._close_random_cashier()
-        else:
-            required_cashiers = (queue_size // self.config.CUSTOMERS_PER_CASHIER) + 1
-            if required_cashiers > current_active and current_active < self.num_cashiers:
-                self._open_random_cashier()
 
     def _close_random_cashier(self):
         closeable_cashiers = [num for num in self.active_cashier_numbers if num > 1]

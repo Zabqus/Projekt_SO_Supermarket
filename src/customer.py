@@ -61,8 +61,8 @@ class Customer(Thread):
 
             logging.info(f"Klient {self.id} staje w kolejce")
             self.supermarket.shared_queue.put(self.id)
+            self.supermarket._update_cashiers()  # Dodaj to wywołanie
 
-            # Oczekiwanie na obsługę lub ewakuację
             while self.is_shopping and not self.supermarket.signal_system.is_fire():
                 time.sleep(0.1)
 
