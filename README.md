@@ -34,9 +34,8 @@ zamykane są wszystkie kasy.
 ## Główne funkcjonalności i mechanizmy
 
 ### System zarządzania supermarketem
-* [Dynamiczne zarządzanie kasami (2-10 kas)](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L71-L97)
-* [Automatyczne skalowanie liczby kas w zależności od liczby klientów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/supermarket.py#L136-L149)
-* [System zarządzania kolejkami klientów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/queue_manager.py#L1-L64)
+* [Dynamiczne zarządzanie kasami (2-10 kas)](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/7f297763f5a80f0d03e80e86193d67e3f4c013fa/src/supermarket.py#L102)
+* [System zarządzania kolejkami klientów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/575eecde4c21667d9458098204af5a6212017031/src/customer.py#L56)
 
 ### Procesy i wątki
 * [Implementacja procesów kasjerów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/cashier.py#L4-L25)
@@ -46,7 +45,7 @@ zamykane są wszystkie kasy.
 ### System bezpieczeństwa
 * [Obsługa sytuacji awaryjnych (alarm pożarowy)](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L26-L47)
 * [System ewakuacji klientów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/src/guard.py#L57-L66)
-* [Obsługa sygnałów systemowych](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/0d718678fbb74900258496da1f02f016a735af3e/utils/signal_handler.py#L5-L24)
+* [Obsługa sygnałów systemowych](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/7f297763f5a80f0d03e80e86193d67e3f4c013fa/utils/signal_system.py#L7)
 
 
 ### System kolorowych komunikatów
@@ -56,7 +55,7 @@ zamykane są wszystkie kasy.
 
 ### System synchronizacji
 * [Współdzielona kolejka klientów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/92c8d90e57c55f8895bf7821245a6a42acbe6a39/utils/shared_memory_queue.py#L16-L18)
-* [Synchronizacja procesów kasjerów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/92c8d90e57c55f8895bf7821245a6a42acbe6a39/src/supermarket.py#L52-L59)
+* [Synchronizacja procesów kasjerów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/575eecde4c21667d9458098204af5a6212017031/src/supermarket.py#L52-L59)
 
 
 
@@ -77,11 +76,11 @@ zamykane są wszystkie kasy.
 
 ### Obsługa sygnałów
 * [Użyte sygnały](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/92c8d90e57c55f8895bf7821245a6a42acbe6a39/utils/signal_system.py#L11-L13)
-* [Wywołanie sygnałów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/92c8d90e57c55f8895bf7821245a6a42acbe6a39/utils/signal_system.py#L42-L51)
+* [Wywołanie sygnałów](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/7f297763f5a80f0d03e80e86193d67e3f4c013fa/utils/signal_system.py#L41)
 
 ### Pamięć współdzelona
 * [Utworzenie pliku w pamięcu współdzielonej](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/92c8d90e57c55f8895bf7821245a6a42acbe6a39/utils/shared_memory_queue.py#L16-L18)
-* [Sprawdzenie rozmiaru kolejki przy pomocy pamięci współdzielonej](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/92c8d90e57c55f8895bf7821245a6a42acbe6a39/src/supermarket.py#L115)
+* [Operacje na pamięci](https://github.com/Zabqus/Projekt_SO_Supermarket/blob/575eecde4c21667d9458098204af5a6212017031/utils/shared_memory_queue.py#L20-L33)
 
 ## Co udało się zrobić
  
