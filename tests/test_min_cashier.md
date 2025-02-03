@@ -19,7 +19,7 @@ W efekcie otrzymujemy następujący wynik:
 2025-01-27 18:22:43,140 [INFO] - klient 271 zakończył robienie zakupów
 2025-01-27 18:22:43,141 [INFO] - Klient 271 stanał w kolejce 1
 2025-01-27 18:22:48,133 [INFO] - === STATUS SUPERMARKETU ===
-2025-01-27 18:22:48,133 [INFO] - Active cashiers: 2
+2025-01-27 18:22:48,133 [INFO] - Aktywne kasy: 2
 2025-01-27 18:22:48,134 [INFO] - Kasjer 1: 1 klientów w kolejce
 2025-01-27 18:22:48,134 [INFO] - Kasjer 2: 0 klientów w kolejce
 2025-01-27 18:22:48,134 [INFO] - ========================

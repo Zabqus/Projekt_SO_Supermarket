@@ -21,12 +21,12 @@ class Cashier:
 
         while self.is_active:
             try:
-                # Próba obsługi klienta ze współdzielonej kolejki
+
                 customer = self.shared_queue.get(timeout=0.2)
                 if customer is not None and self.is_active:
                     self._serve_customer(customer)
             except Empty:
-                # Brak klientów w kolejce
+
                 continue
             except Exception as e:
                 logging.error(f"Błąd kasjera {self.cashier_id + 1}: {e}")
@@ -36,7 +36,7 @@ class Cashier:
 
     def _serve_customer(self, customer_id):
         """Obsługa pojedynczego klienta"""
-        service_time = random.uniform(4, 6)
+        service_time = random.uniform(2, 4)
         logging.info(f"Kasjer {self.cashier_id + 1} obsługuje klienta {customer_id} przez {service_time:.2f}s")
         time.sleep(service_time)
         logging.info(f"Kasjer {self.cashier_id + 1} zakończył obsługę klienta {customer_id}")

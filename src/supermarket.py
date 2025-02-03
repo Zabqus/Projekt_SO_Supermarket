@@ -16,7 +16,7 @@ class Supermarket:
         self.num_cashiers = num_cashiers
         self.min_active_cashiers = min_active_cashiers
 
-        # System sygnałów
+
         self.signal_system = SignalSystem()
 
         self.shared_queue = SharedMemoryQueue()
@@ -25,7 +25,7 @@ class Supermarket:
         self.total_customers = 0
         self.customers = []  # lista wątków klientów
 
-        # Rozpoczynamy z minimum 2 kasjerami
+        '''Rozpoczynamy z minimum 2 kasjerami'''
         self.active_cashier_numbers = [0, 1]
 
         logging.info(f"Przygotowanie {min_active_cashiers} kasjerów do otwarcia")
@@ -92,37 +92,28 @@ class Supermarket:
             new_customer.start()
             self.total_customers += 1
 
-            # Opóźnienie przed następnym klientem
-            time.sleep(random.uniform(0.5, 1))
+
+            time.sleep(random.uniform(0.7, 1.3))
 
         except Exception as e:
             logging.error(f"Błąd podczas generowania klienta: {e}")
 
-    '''def _add_customer(self, customer_id):
-        if len(self.active_cashier_numbers) > 0:
-            self.shared_queue.put(customer_id)
-            self.total_customers += 1
-            logging.info(f"Klient {customer_id} stanął w kolejce")
-            self._update_cashiers()'''
 
     def _update_cashiers(self):
         queue_size = self.shared_queue.qsize()
         current_active = len(self.active_cashier_numbers)
-
 
         required_cashiers = max(
             self.config.MIN_ACTIVE_CASHIERS,
             queue_size // self.config.CUSTOMERS_PER_CASHIER + 1
         )
 
-
         if current_active < required_cashiers and current_active < self.config.NUM_CASHIERS:
             available = list(set(range(self.config.NUM_CASHIERS)) - set(self.active_cashier_numbers))
             if available:
                 self._start_cashier(available[0])
 
-
-        elif queue_size < self.config.CUSTOMERS_PER_CASHIER * (current_active - 1):
+        elif queue_size < (self.config.CUSTOMERS_PER_CASHIER * (current_active - 1)) - 2:
             if current_active > self.config.MIN_ACTIVE_CASHIERS:
                 self._close_random_cashier()
 
@@ -147,7 +138,7 @@ class Supermarket:
         self._cleanup_started = True
         self.is_open = False
 
-        # Zatrzymanie wątków klientów
+        '''Zatrzymanie wątków klientów'''
         for customer in self.customers:
             customer.is_shopping = False
             try:
@@ -155,7 +146,7 @@ class Supermarket:
             except:
                 pass
 
-        # Zamykanie procesów kasjerów
+        '''Zatrzymanie procesów kasjerów'''
         for cashier_num in sorted(self.active_cashier_numbers):
             try:
                 if self.cashiers[cashier_num]:
@@ -167,7 +158,7 @@ class Supermarket:
             except:
                 pass
 
-        # Czyszczenie pozostałych procesów potomnych
+        '''Czyszczenie pozostałych procesów'''
         try:
             while True:
                 pid, _ = os.waitpid(-1, os.WNOHANG)
@@ -176,7 +167,7 @@ class Supermarket:
         except ChildProcessError:
             pass
 
-        # Czyszczenie zasobów
+
         try:
             self.shared_queue.close()
             if hasattr(self, 'guard'):
